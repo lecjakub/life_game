@@ -11,7 +11,7 @@ pub trait EventListener {
 }
 
 pub trait EventSource {
-    fn add_event_listener(&mut self, list: Box<dyn EventListener>);
+    fn add_event_listener(&mut self, lis: Box<dyn EventListener>);
 }
 
 pub trait GraphicComponent {
