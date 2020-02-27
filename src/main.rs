@@ -10,13 +10,12 @@ use piston::input::{PressEvent, RenderArgs, RenderEvent, UpdateArgs, UpdateEvent
 use piston::window::WindowSettings;
 use std::collections::HashMap;
 use crate::cgc::{EventSource, EventListener};
-use life_game::LifeState;
+use crate::life_game::LifeState;
 
-
+pub mod grid;
 pub mod cgc;
 pub mod utils;
 pub mod life_game;
-pub mod grid;
 pub mod consts;
 pub mod drawer;
 
