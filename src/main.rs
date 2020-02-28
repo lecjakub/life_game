@@ -3,22 +3,27 @@ extern crate graphics;
 extern crate opengl_graphics;
 extern crate piston;
 
+use crate::cgc::{EventListener, EventSource};
+use crate::life_game::LifeState;
 use glutin_window::GlutinWindow as Window;
 use opengl_graphics::{GlGraphics, OpenGL};
 use piston::event_loop::{EventSettings, Events};
-use piston::input::{PressEvent, RenderArgs, RenderEvent, UpdateArgs, UpdateEvent, Button, MouseCursorEvent};
+use piston::input::keyboard::Key;
+use piston::input::Button::Keyboard;
+use piston::input::MouseButton;
+use piston::input::{
+    Button, MouseCursorEvent, PressEvent, RenderArgs, RenderEvent, UpdateArgs, UpdateEvent,
+};
 use piston::window::WindowSettings;
 use std::collections::HashMap;
-use crate::cgc::{EventSource, EventListener};
-use crate::life_game::LifeState;
 
-pub mod grid;
+pub mod cell;
 pub mod cgc;
-pub mod utils;
-pub mod life_game;
 pub mod consts;
 pub mod drawer;
-
+pub mod grid;
+pub mod life_game;
+pub mod utils;
 
 fn main() {
     let opengl = OpenGL::V3_2;
@@ -42,14 +47,8 @@ fn main() {
     rules.insert(7, LifeState::Die);
     rules.insert(8, LifeState::Die);
 
-    let mut app = life_game::LifeGame {
-        rotation: 0.0,
-        grid: grid::Grid::new(40, 40),
-        rules: rules,
-        in_menu: true,
-        paused: false,
-        drawer: drawer::Drawer::new(),
-    };
+    //creating our game
+    let mut app = life_game::LifeGame::new(40, 40, rules, false, false);
 
     let mut events = Events::new(EventSettings::new());
     let mut cursor_pos: [f64; 2] = [0.0, 0.0];
@@ -71,12 +70,32 @@ fn main() {
         match e.press_args() {
             Some(button) => {
                 println!("Clicked on X:{} Y:{} ", cursor_pos[0], cursor_pos[1]);
-//                match button {
-//                    Button::Keyboard(key) => key_value = key.code(),
-//                    Button::Mouse(_) => {}
-//                    Button::Controller(_) => {}
-//                    Button::Hat(_) => {}
-//                }
+                match button {
+                    Button::Keyboard(key) => {
+                        println!("Key : {:?}", key);
+                        match key {
+                            Key::Space => {
+                                if !app.in_step_mode() {
+                                    app.toggle_on_step_mode();
+                                } else {
+                                    app.toggle_off_step_mode();
+                                }
+                            }
+                            _ => {}
+                        }
+                    }
+                    Button::Mouse(key) => match key {
+                        MouseButton::Left => {
+                            if app.in_step_mode() {
+                                app.step();
+                            }
+                        }
+                        _ => {}
+                    },
+                    //                    Button::Controller(_) => {}
+                    //                    Button::Hat(_) => {}
+                    _ => {}
+                }
             }
             _ => {}
         }
