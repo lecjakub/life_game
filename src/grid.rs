@@ -22,10 +22,10 @@ impl Grid {
         let mut rng = thread_rng();
         let mut grid: Vec<Vec<Cell>> = vec![];
         for _ in 0..width {
-            let mut col=vec![];
+            let mut col = vec![];
 
-            for _ in 0..height{
-                col.push(Cell::new(random()));
+            for _ in 0..height {
+                col.push(Cell::new(false));
             }
             grid.push(col);
         }
@@ -84,6 +84,15 @@ impl Grid {
 
     pub fn get_cell_ref<'a>(&'a self, x: u32, y: u32) -> &'a Cell {
         &self.grid[x as usize][y as usize]
+    }
+
+    pub fn negate_cell_state(&mut self, x:u32,y:u32){
+        if get_cell!(self,x,y).is_alive(){
+            get_cell!(self,x,y).set_life(false);
+        }
+        else{
+            get_cell!(self,x,y).set_life(true);
+        }
     }
 }
 

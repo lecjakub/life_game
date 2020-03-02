@@ -69,7 +69,6 @@ fn main() {
 
         match e.press_args() {
             Some(button) => {
-                println!("Clicked on X:{} Y:{} ", cursor_pos[0], cursor_pos[1]);
                 match button {
                     Button::Keyboard(key) => {
                         println!("Key : {:?}", key);
@@ -81,13 +80,24 @@ fn main() {
                                     app.toggle_off_step_mode();
                                 }
                             }
+                            Key::Return =>{
+                                if app.in_step_mode(){
+                                    app.step();
+                                }
+                            }
                             _ => {}
                         }
                     }
                     Button::Mouse(key) => match key {
                         MouseButton::Left => {
                             if app.in_step_mode() {
-                                app.step();
+                                println!("Clicked on X:{} Y:{} ", cursor_pos[0], cursor_pos[1]);
+                                let (tile_x, tile_y) = (
+                                    (cursor_pos[0] / app.drawer.get_tile_size()).trunc() as u32,
+                                    (cursor_pos[1] / app.drawer.get_tile_size()).trunc() as u32,
+                                );
+                                println!("X:{}, Y:{} ", tile_x, tile_y);
+                                app.grid.negate_cell_state(tile_x, tile_y);
                             }
                         }
                         _ => {}

@@ -87,4 +87,5 @@ impl LifeGame {
     pub fn in_step_mode(&self) -> bool {
         self.step_mode
     }
+    
 }

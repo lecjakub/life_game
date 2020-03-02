@@ -25,7 +25,8 @@ impl Cell {
     }
     pub fn update_state(&mut self){
         match self.next_life_state{
-            LifeState::Revive | LifeState::Survive => self.alive = true,
+            LifeState::Revive => self.alive = true,
+            LifeState::Survive if self.alive => self.alive=true,
             LifeState::Die => self.alive = false,
             _ => {}
         }
